@@ -7,6 +7,7 @@ from keyboards.inline_button import start_keyboard
 from profanity_check import predict, predict_prob
 
 async def chat_message(message: types.Message):
+    db = Database()
     print(message)
     if message.chat.id == -4062917267:
         ban_word_predict_prob = predict_prob([message.text])
@@ -17,6 +18,28 @@ async def chat_message(message: types.Message):
                 text=f"User: {message.from_user.id} {message.from_user.first_name}\n"
                      f"Dont curse in this chat!"
             )
+
+            user = db.sql_select_ban_user(
+                telegram_id=message.from_user.id
+            )
+            print(user)
+            # if not user:
+            #     db.sql_insert_users(
+            #         telegram_id=message.from_user.id
+            #     )
+            # elif user:
+            #     db.sql_update_ban_user_count(
+            #         telegram_id=message.from_user.id
+            #     )
+
+
+
+
+        # db.sql_insert_ban_user(
+        #     telegram_id=message.from_user.id
+        # )
+
+
     else:
         await message.reply(
             text='There is no such a command'
