@@ -13,6 +13,8 @@ class Database:
 
         self.connection.execute(sql_queries.CREATE_USER_TABLE_QUERY)
         self.connection.execute(sql_queries.CREATE_BAN_USER_TABLE_QUERY)
+        self.connection.execute(sql_queries.CREATE_USER_FORM_TABLE_QUERY)
+
 
         self.connection.commit()
 
