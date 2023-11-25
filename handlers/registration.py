@@ -1,5 +1,6 @@
 import sqlite3
 
+import aiogram.utils.exceptions
 from aiogram import types, Dispatcher
 from config import bot, DESTINATION
 from const import USER_FORM_TEXT
@@ -87,30 +88,55 @@ async def load_age(message: types.Message, state: FSMContext):
     await RegistrationStates.next()
 
 async def load_photo(message: types.Message, state: FSMContext):
+    db = Database()
     path = await message.photo[-1].download(
         destination_dir=DESTINATION
     )
     print(path.name)
     async with state.proxy() as data:
         with open(path.name, 'rb') as photo:
+            try:
+                 await bot.send_photo(
+                    chat_id=message.from_user.id,
+                    photo=photo,
+                    caption=USER_FORM_TEXT.format(
+                        nickname=data['nickname'],
+                        bio=data['bio'],                        geo=data['geo'],
+                        gender=data['gender'],
+                        age=data['age'],
+                        )
+                    )
+            except aiogram.utils.exceptions.BadRequest:
                 await bot.send_photo(
                     chat_id=message.from_user.id,
                     photo=photo,
                     caption=USER_FORM_TEXT.format(
                         nickname=data['nickname'],
-                        bio=data['bio'],
+                        bio="Student",
                         geo=data['geo'],
                         gender=data['gender'],
                         age=data['age'],
-                    ),
+                    )
+                )
+                await bot.send_message(
+                    chat_id=message.from_user.id,
+                    text=data['bio']
                 )
 
+                db.sql_insert_user_form_register(
+                    telegram_id=message.from_user.id,
+                    nickname=data['nickname'],
+                    bio=data['bio'],
+                    geo=data['geo'],
+                    gender=data['gender'],
+                    age=data['age'],
+                    photo=path.name
+                )
         await bot.send_message(
             chat_id=message.from_user.id,
-            text='Registered successfully?😎'
+            text="Registered successfully🎉"
         )
-
-
+        await state.finish()
 
 
 def register_registration_handlers(dp: Dispatcher):
