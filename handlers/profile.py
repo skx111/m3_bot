@@ -31,7 +31,7 @@ async def my_profile_call(call: types.CallbackQuery):
         )
 
 async def random_profiles_call(call: types.CallbackQuery):
-    print(call.message.caption)
+    print('signal prishel')
     if call.message.caption.startswith("Hello"):
         pass
     else:
@@ -41,8 +41,9 @@ async def random_profiles_call(call: types.CallbackQuery):
             pass
     db = Database()
     profiles = db.sql_select_filter_user_form(
-        tg_id=call.from_user.id
+        tg_id=call.message.from_user.id
     )
+    print(profiles)
     if not profiles:
         await bot.send_message(
             chat_id=call.from_user.id,

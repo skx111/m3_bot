@@ -95,18 +95,18 @@ async def load_photo(message: types.Message, state: FSMContext):
     print(path.name)
     async with state.proxy() as data:
         with open(path.name, 'rb') as photo:
-            try:
-                 await bot.send_photo(
-                    chat_id=message.from_user.id,
-                    photo=photo,
-                    caption=USER_FORM_TEXT.format(
-                        nickname=data['nickname'],
-                        bio=data['bio'],                        geo=data['geo'],
-                        gender=data['gender'],
-                        age=data['age'],
-                        )
-                    )
-            except aiogram.utils.exceptions.BadRequest:
+            # try:
+            #      await bot.send_photo(
+            #         chat_id=message.from_user.id,
+            #         photo=photo,
+            #         caption=USER_FORM_TEXT.format(
+            #             nickname=data['nickname'],
+            #             bio=data['bio'],                        geo=data['geo'],
+            #             gender=data['gender'],
+            #             age=data['age'],
+            #             )
+            #         )
+            # except aiogram.utils.exceptions.BadRequest:
                 await bot.send_photo(
                     chat_id=message.from_user.id,
                     photo=photo,
