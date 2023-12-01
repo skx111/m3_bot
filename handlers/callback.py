@@ -1,9 +1,9 @@
 import sqlite3
-
 from aiogram import types, Dispatcher
 from config import bot, ADMIN_ID
 from database.sql_commands import Database
 from keyboards.inline_button import questionnaire_keyboard
+from scraping.news_scraper import NewsScraper
 
 
 async def start_questionnaire_call(call: types.CallbackQuery):
@@ -40,6 +40,16 @@ async def admin_call(message: types.Message):
         )
 
 
+async def scraper_call(call: types.CallbackQuery):
+    scraper = NewsScraper()
+    data = scraper.parse_data()
+    for url in data[:4]:
+        await bot.send_message(
+            chat_id=call.from_user.id,
+            text=f"{scraper.PLUS_URL + url}"
+        )
+
+
 
 
 def register_callback_handlers(dp: Dispatcher):
@@ -50,3 +60,6 @@ def register_callback_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(black_call,
                                        lambda call: call.data == 'black')
     dp.register_message_handler(admin_call, lambda word: 'dorei' in word.text)
+
+    dp.register_callback_query_handler(scraper_call,
+                                       lambda call: call.data == "news")

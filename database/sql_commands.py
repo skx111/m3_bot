@@ -159,11 +159,30 @@ class Database:
     def sql_select_user_by_link(self, link):
         self.cursor.row_factory = lambda cursor, row: {
             'tg_id': row[0],
+            'telegram_id': row[1],
+            'username': row[2],
+            'first_name': row[3],
+            'last_name': row[4],
+            'link': row[5]
         }
         return self.cursor.execute(
             sql_queries.SELECT_USER_BY_LINK_QUERY,
             (link,)
-        ).fetchone()
+        ).fetchall()
+
+
+    def sql_select_all_referral_by_owner_query(self, owner):
+        self.cursor.row_factory = lambda cursor, row: {
+            'tg_id': row[0],
+            'owner': row[1],
+            'referral': row[2],
+        }
+        return self.cursor.execute(
+            sql_queries.SELECT_ALL_REFERRAL_OWNER_QUERY,
+            (owner,)
+        ).fetchall()
+
+
 
     def sql_update_balance(self, tg_id):
         print(tg_id)

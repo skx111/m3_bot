@@ -52,8 +52,28 @@ async def reference_link_call(call: types.CallbackQuery):
         )
 
 
+async def referral_list_call(call: types.CallbackQuery):
+    referral_users = Database().sql_select_all_referral_by_owner_query(
+        owner=call.from_user.id
+    )
+    data = []
+    if referral_users:
+        for user in referral_users:
+            data.append(f"{user['referral']})(tg://user?id={user['referral']})")
+            text = '\n'.join(data)
+            await bot.send_message(
+                chat_id=call.from_user.id,
+                text=text,
+                parse_mode=types.ParseMode.MARKDOWN
+            )
+
+
+
+
 def register_reference_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(reference_menu_call,
                                        lambda call: call.data == 'reference_menu')
     dp.register_callback_query_handler(reference_link_call,
                                        lambda call: call.data == 'reference_link')
+    dp.register_callback_query_handler(referral_list_call,
+                                       lambda call: call.data == 'reference_list')
