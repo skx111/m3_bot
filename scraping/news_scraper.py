@@ -11,10 +11,10 @@ class NewsScraper:
         # 'Referer': 'https://www.prnewswire.com/news-releases/',
         'Connection': 'keep-alive',
     }
-    MAIN_URL = "https://www.prnewswire.com/news-releases/news-releases-list/"
-    LINK_XPATH = '//div[@class="card col-view"]/a/@href'
-    PLUS_URL = 'https://www.prnewswire.com'
-    IMG_XPATH = '//div[@class="img-ratio-element"]/img/@src'
+    MAIN_URL = "https://www.ts.kg/"
+    LINK_XPATH = '//div[@class="app-shows-item-full"]/a/@href'
+    PLUS_URL = 'https://www.ts.kg'
+    IMG_XPATH = '//div[@class="app-shows-item-full"]/a/img/@src'
 
     def parse_data(self):
         html = requests.get(url=self.MAIN_URL, headers=self.headers).text
