@@ -27,6 +27,11 @@ async def start_keyboard():
         "Latest News",
         callback_data="news"
     )
+    async_news_button = InlineKeyboardButton(
+        "Async Latest News",
+        callback_data="async_latest_news"
+    )
+
 
     markup.add(questionnaire_button)
     markup.add(registration_button)
@@ -34,6 +39,7 @@ async def start_keyboard():
     markup.add(random_profiles_button)
     markup.add(reference_menu_button)
     markup.add(news_button)
+    markup.add(async_news_button)
     return markup
 
 
@@ -94,4 +100,13 @@ async def reference_menu_keyboard():
     )
     markup.add(reference_button)
     markup.add(reference_list_button)
+    return markup
+
+async def save_button():
+    markup = InlineKeyboardMarkup()
+    save_service = InlineKeyboardButton(
+        "save",
+        callback_data='save_service'
+    )
+    markup.add(save_service)
     return markup

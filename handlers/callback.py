@@ -2,8 +2,11 @@ import sqlite3
 from aiogram import types, Dispatcher
 from config import bot, ADMIN_ID
 from database.sql_commands import Database
-from keyboards.inline_button import questionnaire_keyboard
+from keyboards.inline_button import questionnaire_keyboard, save_button
 from scraping.news_scraper import NewsScraper
+from scraping.async_news import AsyncNewsScraper
+import re
+
 
 
 async def start_questionnaire_call(call: types.CallbackQuery):
@@ -49,6 +52,24 @@ async def scraper_call(call: types.CallbackQuery):
             text=f"{scraper.PLUS_URL + url}"
         )
 
+# async def save_service_call(call: types.CallbackQuery):
+#     link = re.search(r'(https?://\S+)', call.message.text)
+#     if link:
+#         Database().sql_insert_service_commands(link=link.group(0))
+#
+#     await bot.send_message(chat_id=call.from_user.id, text='You saved the link')
+
+
+async def async_service(call: types.CallbackQuery):
+    # data = await AsyncScraper().async_scrapers()
+    data = await AsyncNewsScraper().async_crapers()
+    links = AsyncNewsScraper.PLUS_URL
+    for link in data:
+        await bot.send_message(chat_id=call.from_user.id,
+                               text=f"Services O!:"
+                               f"\n{links}{link}", reply_markup=await save_button())
+
+
 
 
 
@@ -63,3 +84,7 @@ def register_callback_handlers(dp: Dispatcher):
 
     dp.register_callback_query_handler(scraper_call,
                                        lambda call: call.data == "news")
+    dp.register_callback_query_handler(async_service,
+                                       lambda call: call.data == "async_service")
+    # dp.register_callback_query_handler(save_service_call,
+    #                                    lambda call: call.data == "save_service_call")
